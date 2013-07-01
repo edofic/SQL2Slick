@@ -30,43 +30,31 @@ object SqlToSlick {
     println("--------------------------------------------------------------")
 
     val input = io.Source.stdin.getLines().mkString("\n")
+    val parsed = apply(input)
 
     println("--------------------------------------------------------------")
 
-    val parsed = SqlFieldsParser.parseAll(SqlFieldsParser.table, input)
-    if (parsed.successful) {
+    val output = parsed match {
+      case Right(code) =>
+        s"""
+          |--------------------------------------------------------------
+          | Parsed successfully:
+          | Please copy the code below:
+          |--------------------------------------------------------------
+          |
+          |$code
+        """.stripMargin
 
-      val (tableName, fields) = parsed.get
-      val className = tableName.toCapitalizedCamelCaseIdent
+      case Left(error) =>
+        s"""
+          |--------------------------------------------------------------
+          | Parsing failed.
+          |--------------------------------------------------------------
+          |
+          |$error
+        """.stripMargin
 
-      println()
-
-      println("--------------------------------------------------------------")
-      println(" Parsed successfully: "+tableName)
-      println(" Please copy the code below:")
-      println("--------------------------------------------------------------")
-
-      println()
-
-      println(SlickGenerator.genCaseClass(className, fields))
-      println()
-
-      println()
-
-      println(SlickGenerator.genMappedTable(tableName,className,fields))
-      println()
-
-    } else {
-      println()
-
-      println("--------------------------------------------------------------")
-      println(" Parsing failed.")
-      println("--------------------------------------------------------------")
-
-      println()
-      println(parsed)
     }
-
-
+    println(output)
   }
 }
