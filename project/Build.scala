@@ -14,7 +14,7 @@ object SqlToSlickBuild extends Build {
     base = file("."),
     settings = baseSettings ++ Seq(
       name := "sql2slick",
-      organization := "si.bss.tools.sql2slick",
+      organization := "si.bss.tools",
       version := "0.1-SNAPSHOT",
       resolvers ++= Seq(
         "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases"
